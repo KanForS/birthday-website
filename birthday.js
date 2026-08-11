@@ -17,6 +17,8 @@ function createCloud(initial = false) {
   cloud.src = cloudImages[Math.floor(Math.random() * cloudImages.length)];
 
   cloud.className = "cloud-svg";
+  cloud.alt = "";
+  cloud.setAttribute("aria-hidden", "true");
 
 
   // Random height
@@ -48,19 +50,12 @@ function createCloud(initial = false) {
   }
 
 
-  // First clouds appear already on screen
-  if (initial) {
-
-    const outsideDistance = window.innerWidth * 0.15;
-
-    if (cloud.style.animationName === "moveRight") {
-        cloud.style.left = -outsideDistance + "px";
-    } else {
-        cloud.style.left = window.innerWidth + outsideDistance + "px";
-    }
-
-  }
-
+  // Clouds should stay fully off-screen at first and glide in smoothly.
+  // The CSS keyframes already start every cloud at -400px/+400px off the
+  // edge of the screen, so nothing extra is needed here for the initial
+  // batch — leaving "left" at its default keeps them off-screen without
+  // stacking on an extra buffer that would make them take too long to
+  // glide into view.
 
   cloudContainer.appendChild(cloud);
 
@@ -107,8 +102,15 @@ const fishImages = [
   "Media/fish-4.png"
 ];
 
+const MAX_FISH = 15;
+
 
 function createFish() {
+
+  // Cap how many fish can be swimming at once
+  if (document.querySelectorAll(".fish-svg").length >= MAX_FISH) {
+    return;
+  }
 
   const fish = document.createElement("img");
 
@@ -116,6 +118,8 @@ function createFish() {
   fish.src = fishImages[Math.floor(Math.random() * fishImages.length)];
 
   fish.className = "fish-svg";
+  fish.alt = "";
+  fish.setAttribute("aria-hidden", "true");
 
 
   // Random fish size
@@ -260,6 +264,22 @@ if (centerFish && centerCloud && video) {
 
     }
 
+    function closeBirthday() {
+
+        if (!opened) return;
+
+        opened = false;
+
+        centerFish.classList.remove("fish-up");
+        centerCloud.classList.remove("cloud-down");
+
+        video.pause();
+        video.currentTime = 0;
+
+        video.classList.remove("show");
+
+    }
+
 
     centerFish.addEventListener("click", openBirthday);
     centerCloud.addEventListener("click", openBirthday);
@@ -267,25 +287,22 @@ if (centerFish && centerCloud && video) {
 
     document.addEventListener("click", (event) => {
 
-    if (!opened) return;
+        if (!opened) return;
 
+        // If the click is inside the video, ignore it
+        if (video.contains(event.target)) {
+            return;
+        }
 
-    // If the click is inside the video, ignore it
-    if (video.contains(event.target)) {
-        return;
-    }
+        closeBirthday();
 
+    });
 
-    opened = false;
-
-    centerFish.classList.remove("fish-up");
-    centerCloud.classList.remove("cloud-down");
-
-    video.pause();
-    video.currentTime = 0;
-
-    video.classList.remove("show");
-
-   });
+    // Let Escape close the video too
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            closeBirthday();
+        }
+    });
 
 }
