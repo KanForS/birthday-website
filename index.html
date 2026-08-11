@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Happy Birthday Little &#9729;!</title>
     <link rel="stylesheet" href="birthday.css">
 
@@ -18,15 +20,19 @@
 
     <div class="birthday-scene">
 
-      <video id="birthdayVideo" class="hidden-video" controls preload="none" playsinline>
-        <source src="Media/birthday.mp4" type="video/mp4">
-      </video>
-
       <img src="Media/fish-center.png" class="center-fish" id="centerFish" alt="A fish hiding your birthday surprise — click it!">
 
       <img src="Media/cloud-center.png" class="center-cloud" id="centerCloud" alt="A big fluffy cloud — click it!">
 
     </div>
+
+    <!-- Kept outside .birthday-scene on purpose: that container is
+         transformed for centering, and a transformed ancestor breaks
+         position:fixed sizing for anything inside it. Living outside
+         lets the video size itself against the real viewport. -->
+    <video id="birthdayVideo" class="hidden-video" controls preload="metadata" playsinline>
+      <source src="Media/birthday.mp4" type="video/mp4">
+    </video>
 
 
     <div class="cloud-container"></div>
