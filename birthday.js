@@ -18,16 +18,16 @@ function createCloud(initial = false) {
 
   cloud.className = "cloud-svg";
   cloud.alt = "";
-  cloud.setAttribute("aria-hidden", "true");
 
 
-  // Random height
+  // Random height (dvh instead of vh so clouds stay put correctly as
+  // Safari's toolbar shows/hides on iOS)
   let cloudHeight = Math.random();
 
   if (cloudHeight < 0.5) {
-      cloud.style.top = Math.random() * 25 + "vh"; 
+      cloud.style.top = Math.random() * 25 + "dvh";
   } else {
-      cloud.style.top = Math.random() * 25 + 70 + "vh";
+      cloud.style.top = Math.random() * 25 + 70 + "dvh";
   }
 
 
@@ -102,12 +102,12 @@ const fishImages = [
   "Media/fish-4.png"
 ];
 
-const MAX_FISH = 15;
+const MAX_FISH = 20;
 
 
 function createFish() {
 
-  // Cap how many fish can be swimming at once
+  // Maximum fish on screen at once, same idea as the cloud cap
   if (document.querySelectorAll(".fish-svg").length >= MAX_FISH) {
     return;
   }
@@ -119,7 +119,6 @@ function createFish() {
 
   fish.className = "fish-svg";
   fish.alt = "";
-  fish.setAttribute("aria-hidden", "true");
 
 
   // Random fish size
@@ -194,9 +193,9 @@ function createFish() {
     }
 
 
-    // Position fish
+    // Position fish (dvh instead of vh, same reasoning as the clouds)
     fish.style.left = x + "px";
-    fish.style.top = (y + wave / 3) + "vh";
+    fish.style.top = (y + wave / 3) + "dvh";
 
 
     // Remove fish after leaving screen
@@ -264,22 +263,6 @@ if (centerFish && centerCloud && video) {
 
     }
 
-    function closeBirthday() {
-
-        if (!opened) return;
-
-        opened = false;
-
-        centerFish.classList.remove("fish-up");
-        centerCloud.classList.remove("cloud-down");
-
-        video.pause();
-        video.currentTime = 0;
-
-        video.classList.remove("show");
-
-    }
-
 
     centerFish.addEventListener("click", openBirthday);
     centerCloud.addEventListener("click", openBirthday);
@@ -287,22 +270,25 @@ if (centerFish && centerCloud && video) {
 
     document.addEventListener("click", (event) => {
 
-        if (!opened) return;
+    if (!opened) return;
 
-        // If the click is inside the video, ignore it
-        if (video.contains(event.target)) {
-            return;
-        }
 
-        closeBirthday();
+    // If the click is inside the video, ignore it
+    if (video.contains(event.target)) {
+        return;
+    }
 
-    });
 
-    // Let Escape close the video too
-    document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-            closeBirthday();
-        }
-    });
+    opened = false;
+
+    centerFish.classList.remove("fish-up");
+    centerCloud.classList.remove("cloud-down");
+
+    video.pause();
+    video.currentTime = 0;
+
+    video.classList.remove("show");
+
+   });
 
 }
