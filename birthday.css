@@ -134,8 +134,16 @@ body {
     top: 50%;
     transform: translate(-50%, -50%);
 
-    width: min(92vw, 700px);
+    /* Video is 9:16 (portrait), so it's locked to that ratio explicitly
+       and sized by height first, width second — a portrait clip should
+       never be forced into a landscape-shaped box. object-fit: contain
+       is a safety net so the picture itself is never stretched even if
+       the box ends up an odd size (e.g. rotated/landscape phone). */
+    aspect-ratio: 9 / 16;
+    width: min(92vw, 420px);
+    height: auto;
     max-height: 85dvh;
+    object-fit: contain;
     border-radius: 20px;
 
     z-index: 200;
