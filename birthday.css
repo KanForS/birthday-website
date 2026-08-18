@@ -45,22 +45,22 @@ body {
 
 @keyframes moveRight {
   from {
-    transform: translateX(-400px);
+    transform: translateX(calc(-1 * var(--cloud-offset, 400px)));
   }
 
   to {
-    transform: translateX(calc(100vw + 400px));
+    transform: translateX(calc(100vw + var(--cloud-offset, 400px)));
   }
 }
 
 
 @keyframes moveLeft {
   from {
-    transform: translateX(calc(100vw + 400px));
+    transform: translateX(calc(100vw + var(--cloud-offset, 400px)));
   }
 
   to {
-    transform: translateX(-400px);
+    transform: translateX(calc(-1 * var(--cloud-offset, 400px)));
   }
 }
 
@@ -110,7 +110,13 @@ body {
   transform: translateX(-50%);
   cursor: pointer;
   touch-action: manipulation; /* snappier taps, no double-tap zoom */
-  transition: transform 1.5s ease;
+  opacity: 0;
+  transition: transform 1.5s ease, opacity 1.2s ease;
+}
+
+.center-cloud.loaded,
+.center-fish.loaded {
+  opacity: 1;
 }
 
 .center-cloud {
